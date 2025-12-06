@@ -25,5 +25,5 @@ Thumbs.db
 # Logs
 *.log
 
-# Markdown 
-*.md
+# Markdown Allowed
+# *.md
