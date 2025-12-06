@@ -1,0 +1,15 @@
+# Git & Config
+.git
+.gitignore
+.env
+.vscode
+.idea
+README.md
+
+# Application Data (We mount this volume instead of copying)
+data/
+
+# Build artifacts
+main
+*.exe
+*.log

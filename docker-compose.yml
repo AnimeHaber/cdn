@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: cdn_service
+    build: .
+    ports:
+      - "${CDN_PORT:-3000}:3000"
+    volumes:
+      # Persist data folder to host machine
+      - ./data:/app/data
+    env_file:
+      - .env
+    environment:
+      - CDN_PORT=:3000 # Internal container port
+    restart: unless-stopped
+    networks:
+      - cdn_network
+
+networks:
+  cdn_network:
+    driver: bridge
