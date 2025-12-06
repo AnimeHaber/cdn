@@ -5,6 +5,18 @@ import (
 	"cdn-service/handlers"
 	"log"
 	"strconv"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/helmet"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+)
+
+func main() {
+	// Initialize Config
+	cfg := config.LoadConfig()
+
 	// Initialize Fiber App
 	app := fiber.New(fiber.Config{
 		BodyLimit: 10 * 1024 * 1024, // Default 10MB limit
