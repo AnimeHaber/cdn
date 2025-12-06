@@ -3,6 +3,7 @@ package main
 import (
 	"cdn-service/config"
 	"cdn-service/handlers"
+	"cdn-service/utils"
 	"log"
 	"time"
 
@@ -41,9 +42,13 @@ func main() {
 		},
 	}))
 
-	// Health Check
+	// Health Check & Stats
 	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+		stats := utils.GetSystemStats(cfg.StorageAvatar, cfg.StorageImage)
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"status": "ok",
+			"system": stats,
+		})
 	})
 
 	app.Get("/", func(c *fiber.Ctx) error {

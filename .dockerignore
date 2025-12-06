@@ -6,7 +6,7 @@
 .idea
 README.md
 
-# Application Data (We mount this volume instead of copying)
+# Application Data 
 data/
 
 # Build artifacts
