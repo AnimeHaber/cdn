@@ -1,5 +1,5 @@
 # Stage 1: Builder
-FROM golang:1.23-alpine AS builder
+FROM golang:alpine AS builder
 
 # Install system dependencies required for CGO or specific tools if needed
 # fiber/imaging is pure Go largely, but 'imaging' might need minimal dependencies
