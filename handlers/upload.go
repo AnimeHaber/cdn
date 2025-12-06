@@ -36,10 +36,10 @@ func Upload(cfg *config.Config, category string) fiber.Handler {
 		// Validate extension (Basic Image Check)
 		ext := strings.ToLower(filepath.Ext(file.Filename))
 		validExts := map[string]bool{
-			".jpg": true, ".jpeg": true, ".png": true, 
+			".jpg": true, ".jpeg": true, ".png": true,
 			".gif": true, ".webp": true, ".svg": true,
 		}
-		
+
 		if !validExts[ext] {
 			return c.Status(fiber.StatusUnsupportedMediaType).JSON(fiber.Map{
 				"error": "Only image files are allowed",
@@ -65,12 +65,11 @@ func Upload(cfg *config.Config, category string) fiber.Handler {
 			})
 		}
 
-		// Return success with just the filename as the user might want to construct URL themselves
-		// or return relative path. User said "bu isim dönecek" (this name will return).
+		// Return success with name and category type
 		return c.JSON(fiber.Map{
 			"success": true,
 			"name":    newFileName,
-			"path":    "/" + category + "/" + newFileName,
+			"type":    category,
 		})
 	}
 }
