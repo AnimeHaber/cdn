@@ -3,14 +3,9 @@ package utils
 import (
 	"math/rand"
 	"strings"
-	"time"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 // GenerateRandomString generates a random string of fixed length
 func GenerateRandomString(length int) string {
