@@ -5,16 +5,6 @@ import (
 	"cdn-service/handlers"
 	"log"
 	"strconv"
-	"time"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-)
-
-func main() {
-	// Initialize Config
-	cfg := config.LoadConfig()
-
 	// Initialize Fiber App
 	app := fiber.New(fiber.Config{
 		BodyLimit: 10 * 1024 * 1024, // Default 10MB limit
@@ -22,6 +12,23 @@ func main() {
 
 	// Middleware
 	app.Use(logger.New())
+
+	// Security Headers (Helmet)
+	app.Use(helmet.New())
+
+	// Rate Limiting (60 requests per minute)
+	app.Use(limiter.New(limiter.Config{
+		Max:        60,
+		Expiration: 1 * time.Minute,
+		KeyGenerator: func(c *fiber.Ctx) string {
+			return c.Get("X-API-KEY", c.IP()) // Limit by API Key if present, else IP
+		},
+		LimitReached: func(c *fiber.Ctx) error {
+			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+				"error": "Too many requests. Please slow down.",
+			})
+		},
+	}))
 
 	// Health Check
 	app.Get("/", func(c *fiber.Ctx) error {

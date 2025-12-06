@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"cdn-service/config"
-	"cdn-service/utils"
 	"path/filepath"
-	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -27,28 +25,6 @@ func Upload(cfg *config.Config, category string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		// Parse file
 		file, err := c.FormFile("file")
-		if err != nil {
-			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "File is required (key: 'file')",
-			})
-		}
-
-		// Validate extension (Basic Image Check)
-		ext := strings.ToLower(filepath.Ext(file.Filename))
-		validExts := map[string]bool{
-			".jpg": true, ".jpeg": true, ".png": true,
-			".gif": true, ".webp": true, ".svg": true,
-		}
-
-		if !validExts[ext] {
-			return c.Status(fiber.StatusUnsupportedMediaType).JSON(fiber.Map{
-				"error": "Only image files are allowed",
-			})
-		}
-
-		// Generate Random Name: 5-5-5-5 format
-		newFileName := utils.GenerateCDNFileName() + ext
-
 		// Determine Storage Path
 		var targetDir string
 		if category == "avatar" {
