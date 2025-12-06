@@ -1,0 +1,26 @@
+# Binaries
+/bin
+/dist
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Data storage (CDN images)
+data/
+!data/.gitkeep
+
+# Environment
+.env
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
