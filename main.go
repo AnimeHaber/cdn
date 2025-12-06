@@ -4,7 +4,6 @@ import (
 	"cdn-service/config"
 	"cdn-service/handlers"
 	"log"
-	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -43,6 +42,10 @@ func main() {
 	}))
 
 	// Health Check
+	app.Get("/health", func(c *fiber.Ctx) error {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+	})
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("CDN Service Operational")
 	})
@@ -53,24 +56,12 @@ func main() {
 	api.Post("/upload/avatar", handlers.Upload(cfg, "avatar"))
 	api.Post("/upload/image", handlers.Upload(cfg, "image"))
 
-	// Static File Serving (CDN)
-	// Cache Configuration
-	cacheSeconds, _ := strconv.Atoi(cfg.CacheDuration)
-	if cacheSeconds <= 0 {
-		cacheSeconds = 31536000 // 1 year default
-	}
+	// Static File Serving (CDN) & Optimization
+	// URLs: /avatar/filename.jpg?w=100
+	// We use the same handler structure for both, but we could separate if needed.
+	// NOTE: We replaced the direct Static middleware with our smart handler.
 
-	staticConfig := fiber.Static{
-		Compress:      true,
-		Browse:        false,
-		CacheDuration: time.Duration(cacheSeconds) * time.Second,
-		MaxAge:        cacheSeconds,
-	}
-
-	// Serve avatar and image directories
-	// URLs will be like: http://cdn-host/avatar/5-5-5-5.jpg
-	app.Static("/avatar", cfg.StorageAvatar, staticConfig)
-	app.Static("/image", cfg.StorageImage, staticConfig)
+	app.Get("/:category/:filename", handlers.ServeOptimizedImage(cfg))
 
 	// Start Server
 	log.Printf("Server starting on port %s", cfg.Port)

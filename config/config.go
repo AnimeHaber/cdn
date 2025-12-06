@@ -35,7 +35,7 @@ func LoadConfig() *Config {
 
 	return &Config{
 		Port:          getEnv("CDN_PORT", ":3000"),
-		APIKey:        getEnv("API_KEY", ""), // Must be set for security
+		APIKey:        getEnv("API_KEY", ""),
 		StorageAvatar: avatarPath,
 		StorageImage:  imagePath,
 		CacheDuration: getEnv("CACHE_DURATION", "31536000"),
